@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="smartcharge.smartcharge">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SmartCharge"
+            android:noHistory="true"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <receiver android:name=".PowerConnectionReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                    <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                </intent-filter>
+            </receiver>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Consejos"
+            android:label="@string/title_activity_consejos"
+            android:noHistory="true"
+            android:parentActivityName=".SmartCharge"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="smartcharge.smartcharge.SmartCharge" />
+        </activity>
+        <activity
+            android:name=".About"
+            android:label="@string/title_activity_about"
+            android:noHistory="true"
+            android:parentActivityName=".SmartCharge"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="smartcharge.smartcharge.SmartCharge" />
+        </activity>
+        <activity
+            android:name=".Schedule"
+            android:label="Programar Carga"
+            android:noHistory="true"
+            android:parentActivityName=".SmartCharge"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="smartcharge.smartcharge.SmartCharge" />
+        </activity>
+    </application>
+
+</manifest>
