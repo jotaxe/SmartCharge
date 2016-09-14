@@ -1,11 +1,10 @@
 package smartcharge.smartcharge;
 
-import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,9 +16,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class Schedule extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+        AlarmManager am;
+        TimePicker tp;
+        Calendar calendar;
+        Context context;
+        PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +45,24 @@ public class Schedule extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.context = this;
+        calendar = Calendar.getInstance();
+        tp = (TimePicker) findViewById(R.id.timePicker);
+        am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        final Intent my_intent = new Intent(this.context, Alarm_Receiver.class);
         Button but = (Button) findViewById(R.id.but1);
-        final TimePicker tp = (TimePicker) findViewById(R.id.timePicker);
+        assert but != null;
         but.setOnClickListener(new View.OnClickListener(){
 
-            @TargetApi(Build.VERSION_CODES.M)
-            @Override
+
             public void onClick(View v){
-                int hour = tp.getHour()*100;
-                int min = tp.getMinute();
-                int total = hour+min;
+                int total = tp.getCurrentHour()*100 + tp.getCurrentMinute();
                 Intent myIntent = new Intent(Schedule.this, SmartCharge.class);
                 myIntent.putExtra("horaTotal", total);
                 Schedule.this.startActivity(myIntent);
             }
         });
-
     }
 
     @Override

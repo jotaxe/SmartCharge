@@ -56,6 +56,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="smartcharge.smartcharge.SmartCharge" />
         </activity>
+
+        <receiver android:name=".Alarm_Receiver" />
+
+        <service android:name=".ActivateSmartChargeService"
+            android:enabled="true">
+            </service>
+
     </application>
 
 </manifest>
