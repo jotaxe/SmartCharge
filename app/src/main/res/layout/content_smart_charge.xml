@@ -36,4 +36,33 @@
         android:id="@+id/time"
         android:layout_below="@+id/bat"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="KWatts"
+        android:id="@+id/kw_text"
+        android:layout_below="@+id/ap1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="CO2"
+        android:id="@+id/co2_text"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Desgaste"
+        android:id="@+id/desgaste_text"
+        android:layout_below="@+id/co2_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp" />
 </RelativeLayout>

@@ -29,7 +29,9 @@ import java.util.Calendar;
 public class SmartCharge extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    double kw_d = 0;
+    Calendar click_time;
+    Calendar check_time;
     AlarmManager am;
     Calendar calendar;
     Context context;
@@ -38,6 +40,7 @@ public class SmartCharge extends AppCompatActivity
     int battLevel;
     int schedule_time;
     boolean active = false;
+    boolean standby = false;
     boolean already_schedule = false;
     boolean was_called = false;
     boolean schedule_active = false;
@@ -49,57 +52,33 @@ public class SmartCharge extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
             battLevel = level;
-            SimpleDateFormat h = new SimpleDateFormat("HH");
-            SimpleDateFormat m = new SimpleDateFormat("mm");
-            Calendar cal = Calendar.getInstance();
-
-            final String nowHour = h.format(cal.getTime());
-            final String nowMin = m.format(cal.getTime());
             batt.setText("Bateria Actual: " + String.valueOf(level) + "%");
             boolean su = false;
             su = Shell.SU.available();
             int usbCharge = BatteryManager.BATTERY_PLUGGED_USB;
+
             if(su){
-                    if(schedule_active){
-
-                        int nHour = Integer.parseInt(nowHour);
-                        int nMin = Integer.parseInt(nowMin);
-                        int nTotal = nHour*100 + nMin;
-                        but = (Button) findViewById(R.id.ap1);
-
-                        if(active && nTotal >= schedule_time){
-                            schedule_active = false;
-                            schedule_time = 0;
-                            but.performClick();
-                        }
-
-                        if(battLevel >= 99 && active && !was_called){
-                            Shell.SU.run("echo \"0\" > /sys/class/power_supply/battery/charging_enabled");
-                            Toast.makeText(getApplicationContext(),"¡Cargado de Bateria Desactivado!",Toast.LENGTH_SHORT).show();
-                            was_called = true;
-                        }else{
-                            if(battLevel < 99 && was_called && active) {
-                                Shell.SU.run("echo \"1\" > /sys/class/power_supply/battery/charging_enabled");
-                                Toast.makeText(getApplicationContext(), "¡Cargado de Bateria Activado!", Toast.LENGTH_SHORT).show();
-                                was_called = false;
-                            }
-                        }
-
-                    }else if (!schedule_active){
-                        if(battLevel >= 99 && active && !was_called){
-                            Shell.SU.run("echo \"0\" > /sys/class/power_supply/battery/charging_enabled");
-                            Toast.makeText(getApplicationContext(),"¡Cargado de Bateria Desactivado!",Toast.LENGTH_SHORT).show();
-                            was_called = true;
-                        }else{
-                            if(battLevel < 99 && was_called && active) {
-                                Shell.SU.run("echo \"1\" > /sys/class/power_supply/battery/charging_enabled");
-                                Toast.makeText(getApplicationContext(), "¡Cargado de Bateria Activado!", Toast.LENGTH_SHORT).show();
-                                was_called = false;
-                            }
-                        }
+                if(battLevel >= 99 && active && !was_called){
+                    Shell.SU.run("echo \"0\" > /sys/class/power_supply/battery/charging_enabled");
+                    Toast.makeText(getApplicationContext(),"¡Cargado de Bateria Desactivado!",Toast.LENGTH_SHORT).show();
+                    was_called = true;
+                    check_time = Calendar.getInstance();
+                    kw_d = 0.01;
+                    double dif = check_time.compareTo(click_time);
+                    kw_d = kw_d*dif;
+                    //correr esto a fuera del else para que este bien hecho, esto es para probar el cualculo de diferencia
+                    TextView kw_t = (TextView) findViewById(R.id.kw_text);
+                    kw_t.setText("Dif: " + dif);
+                }else{
+                    if(battLevel < 99 && was_called && active) {
+                        Shell.SU.run("echo \"1\" > /sys/class/power_supply/battery/charging_enabled");
+                        Toast.makeText(getApplicationContext(), "¡Cargado de Bateria Activado!", Toast.LENGTH_SHORT).show();
+                        was_called = false;
                     }
+                }
 
-            }else {
+
+            }else{
                 Toast.makeText(getApplicationContext(),"Tu telefono no esta Rooteado, es posible (MUY) que no sirva :/",Toast.LENGTH_SHORT).show();
             }
         }
@@ -137,6 +116,7 @@ public class SmartCharge extends AppCompatActivity
                 if(active){
                     Toast.makeText(getApplicationContext(),"ACTIVADO",Toast.LENGTH_SHORT).show();
                     but.setText("Desactivar");
+                    click_time = Calendar.getInstance();
                 }else if(!active){
                     Toast.makeText(getApplicationContext(),"DESACTIVADO",Toast.LENGTH_SHORT).show();
                     but.setText("Activar");
@@ -197,14 +177,11 @@ public class SmartCharge extends AppCompatActivity
                             time.setText("Hora Programada: " + schedule_time/100 + ":" + (schedule_time - (schedule_time/100)*100));
                             already_schedule = true;
                         }
+                    }else{
+                        time.setText("Hora no programada");
                     }
                 }
-
-                if(!schedule_active && already_schedule){
-                    time.setText("Hora no programada");
-                }
-
-
+                time.setText("Hora no programada");
             }
         });
     }
