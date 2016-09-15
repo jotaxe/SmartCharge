@@ -181,7 +181,6 @@ public class SmartCharge extends AppCompatActivity
                         time.setText("Hora no programada");
                     }
                 }
-                time.setText("Hora no programada");
             }
         });
     }
